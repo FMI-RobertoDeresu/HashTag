@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Admin";
+}
+
+<div ng-app="admin">
+    <div ng-view></div>
+</div>
+
+@section scripts {
+    <environment names="Development">
+        <script asp-append-version="true" src="~/clientapp/core/core.module.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/services/communication.service.js"></script>
+
+        <script asp-append-version="true" src="~/clientapp/admin/admin.module.js"></script>
+        <script asp-append-version="true" src="~/clientapp/admin/services/admin.service.js"></script>
+        <script asp-append-version="true" src="~/clientapp/admin/controllers/admin.controller.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script asp-append-version="true" src="~/bundles/js/ng-core.js"></script>
+        <script asp-append-version="true" src="~/bundles/js/ng-admin.js"></script>
+    </environment>
+}

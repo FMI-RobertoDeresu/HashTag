@@ -1,0 +1,31 @@
+﻿<div class="row">
+    <div class="col-xs-12 card-group" id="photos-container">
+        <div ng-repeat="photo in photos" class="photo photo-sm photo-has-custom-background">
+            <div class="photo-header">
+                <span class="m-0">
+                    <a class="white" href="/profile/{{photo.user}}">{{photo.user}}</a>
+                </span>
+                <div class="dropdown" ng-show="photo.showActions">
+                    <a class="dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item white" ng-click="setPhotoAsProfile(photo.id)">set as profile</a>
+                        <a class="dropdown-item white" ng-click="deletePhoto(photo.id)">delete</a>
+                    </div>
+                </div>
+            </div>
+            <a ng-click="openLightboxModal($index)">
+                <img ng-src="{{ photo.address }}"/>
+            </a>
+            <div class="photo-footer">
+                <p class="m-0">
+                    <a class="hashtag white" ng-click="searchByHashTag(hashTag)" ng-repeat="hashTag in photo.hashTags track by $index">
+                        #{{ hashTag }}
+                    </a>
+                </p>
+                <p class="m-0">{{ photo.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>

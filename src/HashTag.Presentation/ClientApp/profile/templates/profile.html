@@ -1,0 +1,31 @@
+﻿<div ng-show="!vm.isLoading">
+
+    <!-- profile header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center" id="profile-top">
+                <img ng-show="vm.profilePhoto.address" src="{{ vm.profilePhoto.address }}" class="rounded-circle"/>
+                <br/>
+                <span>{{ vm.fullName }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- add photos button -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <button type="button" class="btn btn-outline-primary m-auto" style="display: block" ng-click="vm.openAddPhotosModal()">
+                <i class="fa fa-plus"></i> {{vm.photos.length > 0 ? "Add more photos" : "Add your first photos" }}
+            </button>
+        </div>
+    </div>
+
+    <!-- photos grid -->
+    <infinite-photos-grid photos="vm.photos"
+                          feed-trigger="vm.feedTrigger"
+                          feed-more-fn="vm.feedMore()"
+                          search-by-hash-tag-fn="vm.toHashTagSearch(hashTag)"
+                          delete-photo-fn="vm.deletePhoto(id)"
+                          set-photo-as-profile-fn="vm.setPhotoAsProfile(id)">
+    </infinite-photos-grid>
+</div>

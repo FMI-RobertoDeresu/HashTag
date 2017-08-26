@@ -1,0 +1,78 @@
+﻿<div>
+    
+    <!-- filter -->
+    <div ng-show="searchVM.filter.visible" id="search-filter-wrapper">
+        <div class="row pb-2">
+            <div class="col-12">
+                <button class="btn btn-outline-primary filter-btn" type="button" data-toggle="collapse" data-target="#filters-container" aria-expanded="false" aria-controls="collapseExample">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div id="filters-container" class="collapse">
+
+            <!-- hashtag -->
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-4 form-group">
+                    <div class="input-group">
+                        <input class="form-control" ng-model="searchVM.filter.hashTag" hashtags placeholder="Filter by hashTags.."/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-outline-primary" ng-click="searchVM.searchByHashTag(false)"
+                                    ng-disabled="searchVM.filter.hashTag == 0">
+                                <i class="fa fa-arrow-right" aria-hidden="true" title="search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- description -->
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-4 form-group">
+                    <div class="input-group">
+                        <input class="form-control" ng-model="searchVM.filter.description" placeholder="Filter by description.."/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-outline-primary" ng-click="searchVM.searchByDescription(false)"
+                                    ng-disabled="searchVM.filter.description == 0">
+                                <i class="fa fa-arrow-right" aria-hidden="true" title="search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- photo -->
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-4 form-group">
+                    <div class="input-group">
+                        <button file-button uploader="searchVM.photoUploader" id="btn-searchByPhoto"
+                                class="btn btn-outline-secondary btn-file-uploader search-image-uploader btn-block rounded-right-0 text-left">
+                            {{ searchVM.searchByPhotoButtonText }}
+                        </button>
+                        <div up-photo-preview class="text-center mt-1 search-image-preview" photo="searchVM.filter.photo.file._file" height="300" width="300"></div>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-outline-primary" ng-click="searchVM.searchByPrediction(false)"
+                                    ng-disabled="searchVM.filter.photo.prediction.length == 0">
+                                <i class="fa fa-arrow-right" aria-hidden="true" title="search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- reset -->
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-4 form-group">
+                    <button ng-click="searchVM.resetFilter()" class="btn btn-outline-primary">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- photos grid -->
+    <infinite-photos-grid photos="searchVM.photos"
+                          feed-trigger="searchVM.feedTrigger"
+                          feed-more-fn="searchVM.feedMore()"
+                          search-by-hash-tag-fn="searchVM.toHashTagSearch(hashTag)">
+    </infinite-photos-grid>
+</div>

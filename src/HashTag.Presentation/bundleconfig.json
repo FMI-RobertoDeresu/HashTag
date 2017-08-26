@@ -1,0 +1,96 @@
+﻿[
+  {
+    "outputFileName": "wwwroot/bundles/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/lib/tether/dist/css/tether.min.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "wwwroot/lib/font-awesome/css/font-awesome.min.css",
+      "wwwroot/lib/glyphicons/styles/glyphicons.css",
+      "wwwroot/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css",
+      "wwwroot/lib/angular-material/angular-material.css",
+      "wwwroot/lib/bootstrap-social/bootstrap-social.css",
+      "wwwroot/lib/toastr/toastr.css",
+      "wwwroot/css/site.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery/dist/jquery.min.js",
+      "wwwroot/lib/tether/dist/js/tether.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
+      "wwwroot/lib/angular/angular.min.js",
+      "wwwroot/lib/angular-route/angular-route.min.js",
+      "wwwroot/lib/angular-file-upload/dist/angular-file-upload.min.js",
+      "wwwroot/lib/angular-animate/angular-animate.min.js",
+      "wwwroot/lib/angular-scroll-glue/src/scrollglue.js",
+      "wwwroot/lib2/angular-ui-bootstrap-tpls-2.5.0.min.js",
+      "wwwroot/lib/angular-aria/angular-aria.js",
+      "wwwroot/lib/angular-messages/angular-messages.js",
+      "wwwroot/lib/angular-material/angular-material.min.js",
+      "wwwroot/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js",
+      "wwwroot/lib/nginfinitescroll/build/ng-infinite-scroll.min.js",
+      "wwwroot/lib/toastr/toastr.min.js",
+      "wwwroot/lib/chart.js/dist/Chart.bundle.min.js",
+      "wwwroot/js/utils.js",
+      "wwwroot/js/alerts.js",
+      "wwwroot/js/site.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/js/ng-core.js",
+    "inputFiles": [
+      "clientapp/core/core.module.js",
+      "clientapp/core/services/communication.service.js",
+      "clientapp/core/services/photo.service.js",
+      "clientapp/core/directives/photosGrid.directive.js",
+      "clientapp/core/directives/hashtags.directive.js",
+      "clientapp/core/directives/fileButton.directive.js",
+      "clientapp/core/directives/upPhotoPreview.directive.js",
+      "clientapp/core/directives/infinitePhotosGrid.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/js/ng-search.js",
+    "inputFiles": [
+      "clientapp/search/search.module.js",
+      "clientapp/search/controllers/search.controller.js",
+      "clientapp/search/services/search.service.js"
+    ],
+    "minify": {
+      "enabled": false
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/js/ng-profile.js",
+    "inputFiles": [
+      "clientapp/profile/profile.module.js",
+      "clientapp/profile/services/profile.service.js",
+      "clientapp/profile/services/addPhotosModal.service.js",
+      "clientapp/profile/controllers/profile.controller.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/bundles/js/ng-admin.js",
+    "inputFiles": [
+      "clientapp/admin/admin.module.js",
+      "clientapp/admin/services/admin.service.js",
+      "clientapp/admin/controllers/admin.controller.js"
+    ],
+    "minify": {
+      "enabled": false
+    }
+  }
+]

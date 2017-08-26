@@ -1,0 +1,29 @@
+﻿@model string
+@{
+    ViewBag.Title = "Search";
+}
+
+<div ng-app="search" ng-init="hashTag='@Model'">
+    <div ng-view></div>
+</div>
+
+@section scripts {
+    <environment names="Development">
+        <script asp-append-version="true" src="~/clientapp/core/core.module.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/services/communication.service.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/services/photo.service.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/directives/photosGrid.directive.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/directives/hashtags.directive.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/directives/fileButton.directive.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/directives/upPhotoPreview.directive.js"></script>
+        <script asp-append-version="true" src="~/clientapp/core/directives/infinitePhotosGrid.js"></script>
+
+        <script asp-append-version="true" src="~/clientapp/search/search.module.js"></script>
+        <script asp-append-version="true" src="~/clientapp/search/controllers/search.controller.js"></script>
+        <script asp-append-version="true" src="~/clientapp/search/services/search.service.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script asp-append-version="true" src="~/bundles/js/ng-core.js"></script>
+        <script asp-append-version="true" src="~/bundles/js/ng-search.js"></script>
+    </environment>
+}

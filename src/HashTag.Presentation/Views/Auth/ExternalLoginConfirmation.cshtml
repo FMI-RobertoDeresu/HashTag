@@ -1,0 +1,32 @@
+﻿@model HashTag.Presentation.Models.Auth.ExternalLoginConfirmationModel
+
+<h3 class="mt-2">Associate your @Model.Provider account.</h3>
+
+<form asp-controller="Auth" asp-action="ExternalLoginConfirmation" method="post" class="form-horizontal">
+    <hr/>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <p class="text-info">
+        You've successfully authenticated with <strong>@Model.Provider</strong>.
+        Please confirm that email address belongs to you, choose a username for this site and then click the Confirm button to finish logging in.
+    </p>
+    <div class="form-group">
+        <label asp-for="Email" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Email" class="form-control" readonly="readonly"/>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="UserName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="UserName" class="form-control"/>
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Confirm</button>
+        </div>
+    </div>
+</form>

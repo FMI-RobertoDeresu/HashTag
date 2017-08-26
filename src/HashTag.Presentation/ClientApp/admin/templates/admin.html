@@ -1,0 +1,51 @@
+﻿<div>
+    
+    <!-- messages -->
+    <div class="alert alert-shadow" ng-class="adminVM.messagesCssClass" ng-repeat="message in adminVM.messages">
+        <a href="javascript:void(0)" class="close" data-dismiss="alert">&times;</a>
+        <strong>{{ message }}</strong>
+    </div>
+
+    <!-- reponse object -->
+    <div class="alert alert-shadow" ng-show="adminVM.responseObject!=null">
+        <a href="javascript:void(0)" class="close" ng-click="adminVM.responseObject=null">&times;</a>
+        <pre ng-show="adminVM.responseObject!=null">{{ adminVM.responseObject | json }}</pre>
+    </div>
+
+    <div ng-cloak id="admin-tabs">
+        <md-content>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <!-- actions -->
+                <md-tab label="Actions">
+                    <md-content class="md-padding">
+                        <button type="button" class="btn btn-outline-primary" ng-disabled="adminVM.isBusy" ng-click="adminVM.savePredictionClasses()">Save prediction classes</button>
+                        <br/><hr/>
+                        <button type="button" class="btn btn-outline-primary" ng-disabled="adminVM.isBusy" ng-click="adminVM.saveSamplesPhotosPredictions()">Save samples photos</button>
+                        <br/><hr/>
+                        <button type="button" class="btn btn-outline-primary" ng-disabled="adminVM.isBusy" ng-click="adminVM.buildClusters()">Build clusters</button>
+                        <br/><hr/>
+                        <button type="button" class="btn btn-outline-primary" ng-disabled="adminVM.isBusy" ng-click="adminVM.createTestDirectory()">Create test directory</button>
+                        <br/><hr/>
+                        <button type="button" class="btn btn-outline-primary" ng-disabled="adminVM.isBusy" ng-click="adminVM.bindPhotosToClusters()">Bind photos to clusters</button>
+                        <br/><hr/>
+                        <button type="button" class="btn btn-outline-primary" ng-disabled="adminVM.isBusy" ng-click="adminVM.kmeansResearch()">K-Means Research</button>
+                    </md-content>
+                </md-tab>
+
+                <!-- k means chart -->
+                <md-tab label="K-Means">
+                    <md-content class="md-padding">
+                        <canvas id="kMeansChart"></canvas>
+                    </md-content>
+                </md-tab>
+
+                <!-- settings -->
+                <md-tab label="Settings">
+                    <md-content class="md-padding my-5 text-center">
+                        <h3>No settings for now.</h3>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+</div>

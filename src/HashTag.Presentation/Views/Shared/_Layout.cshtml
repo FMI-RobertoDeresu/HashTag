@@ -1,0 +1,76 @@
+﻿@using HashTag.Presentation.Models.Auth
+@using HashTag.Presentation.ViewComponents
+@{
+    ViewData["Title"] = ViewData["Title"] ?? "HashTag";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="keywords" content="hashtag, ai, ai hashtags, ai description, photo hashtags, photo description, image hashtags, image description, insta hashtags, instagram hashtags, description, photos"/>
+    <meta name="description" content="HashTag is an AI based application that generates hashtags and description for images. Also it manages albums of photos for registered users."/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="robots" content="noarchive"/>
+    
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" type="image/png" href="~/favicon.png" />
+
+    <link asp-append-version="true" rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"/>
+    <link asp-append-version="true" rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic"/>
+
+    <environment names="Development">
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/tether/dist/css/tether.min.css"/>
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css"/>
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/glyphicons/styles/glyphicons.css"/>
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css"/>
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/angular-material/angular-material.css" />
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/bootstrap-social/bootstrap-social.css"/>
+        <link asp-append-version="true" rel="stylesheet" href="~/lib/toastr/toastr.css" />
+        <link asp-append-version="true" rel="stylesheet" href="~/css/site.css"/>
+    </environment>
+    <environment names="Staging,Production">
+        <link asp-append-version="false" rel="stylesheet" href="~/bundles/css/site.min.css"/>
+    </environment>
+</head>
+<body>
+    @Html.Partial("_Header")
+    
+    <input type="hidden" id="default-url" value="@Url.Content("/")" />
+    <div id="page-container" class="container app-container">
+        @RenderBody()
+    </div>
+
+    @Html.Partial("_Footer")
+    @Html.Partial("_AuthSignIn", new SignInModel())
+    @Html.Partial("_AuthRegister", new RegisterModel())
+
+    <environment Names="Development">
+        <script asp-append-version="true" src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script asp-append-version="true" src="~/lib/tether/dist/js/tether.js"></script>
+        <script asp-append-version="true" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script asp-append-version="true" src="~/lib/angular/angular.min.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-route/angular-route.min.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-file-upload/dist/angular-file-upload.min.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-animate/angular-animate.min.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-scroll-glue/src/scrollglue.js"></script>
+        <script asp-append-version="true" src="~/lib2/angular-ui-bootstrap-tpls-2.5.0.min.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-aria/angular-aria.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-messages/angular-messages.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-material/angular-material.js"></script>
+        <script asp-append-version="true" src="~/lib/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js"></script>
+        <script asp-append-version="true" src="~/lib/nginfinitescroll/build/ng-infinite-scroll.min.js"></script>
+        <script asp-append-version="true" src="~/lib/toastr/toastr.js"></script>
+        <script asp-append-version="true" src="~/lib/chart.js/dist/Chart.bundle.min.js"></script>
+        <script asp-append-version="true" src="~/js/utils.js"></script>
+        <script asp-append-version="true" src="~/js/alerts.js"></script>
+        <script asp-append-version="true" src="~/js/site.js"></script>
+    </environment>
+    <environment Names="Stanging,Production">
+        <script asp-append-version="true" src="~/bundles/js/site.min.js"></script>
+    </environment>
+
+    @await Component.InvokeAsync(nameof(Alerts))
+    @RenderSection("scripts", false)
+</body>
+</html>

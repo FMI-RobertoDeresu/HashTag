@@ -1,0 +1,208 @@
+(function () {
+
+    var clientAppUrl;
+    angular.injector(["ng", "core"]).invoke(function (CLIENT_APP_URL) {
+        clientAppUrl = CLIENT_APP_URL;
+    });
+
+    angular
+        .module("search", ["core", "ngRoute", "angularFileUpload", "infinite-scroll"])
+        .config(configure)
+        .constant("PAHT_TEMPLATES", clientAppUrl + "search/templates/");
+
+    function configure($routeProvider, PAHT_TEMPLATES) {
+        $routeProvider.when("/",
+        {
+            templateUrl: PAHT_TEMPLATES + "search.html",
+            controller: "searchController",
+            controllerAs: "searchVM"
+        });
+    }
+
+})();
+(function() {
+
+    angular
+        .module("search")
+        .controller("searchController", searchController);
+
+    searchController
+        .$inject = ["$scope", "$window", "FileUploader", "searchService", "photoService", "communicationService"];
+
+    function searchController($scope, $window, FileUploader, searchService, photoService, communicationService) {
+        const searchVM = this;
+
+        searchVM.feedStopped = false;
+        searchVM.errors = [];
+        searchVM.searchByPhotoButtonText = "Filter by photo (click to upload)..";
+        searchVM.photos = [];
+        searchVM.feedTrigger = 0;
+        searchVM.lastFilter = "none";
+
+        searchVM.filter = {
+            visible: !$scope.$parent.hashTag,
+            hashTag: $scope.$parent.hashTag,
+            description: "",
+            photo: {
+                file: {},
+                prediction: []
+            }
+        };
+
+        searchVM.photoUploader = new FileUploader();
+        searchVM.photoUploader.onAfterAddingFile = afterAddingPhoto;
+
+        searchVM.search = search;
+        searchVM.searchByHashTag = searchByHashTag;
+        searchVM.searchByDescription = searchByDescription;
+        searchVM.searchByPrediction = searchByPrediction;
+        searchVM.resetFilter = resetFilter;
+
+        searchVM.toHashTagSearch = toHashTagSearch;
+        searchVM.feedMore = feedMore;
+
+        activate();
+
+        function activate() {
+            if (searchVM.filter.hashTag.length > 0)
+                searchByHashTag();
+        }
+
+        function afterAddingPhoto(selectedPhoto) {
+            searchVM.filter.photo = {
+                file: {},
+                prediction: []
+            };
+            searchVM.searchByPhotoButtonText = "Uploading photo..";
+            photoService.computePrediction(selectedPhoto, function(prediction) {
+                searchVM.filter.photo.file = selectedPhoto;
+                searchVM.filter.photo.prediction = prediction;
+                searchVM.searchByPhotoButtonText = selectedPhoto.file.name;
+            });
+        }
+
+        function search(isFeedRequest) {
+            searchVM.lastFilter = "none";
+            return searchServiceCall(isFeedRequest, function() {
+                return searchService.search(searchVM.photos.length);
+            });
+        }
+
+        function searchByHashTag(isFeedRequest) {
+            searchVM.lastFilter = "hashtag";
+            return searchServiceCall(isFeedRequest, function() {
+                return searchService.searchByHashTag(searchVM.filter.hashTag, searchVM.photos.length);
+            });
+        }
+
+        function searchByDescription(isFeedRequest) {
+            searchVM.lastFilter = "description";
+            return searchServiceCall(isFeedRequest, function() {
+                return searchService.searchByDescription(searchVM.filter.description, searchVM.photos.length);
+            });
+        }
+
+        function searchByPrediction(isFeedRequest) {
+            searchVM.lastFilter = "prediciton";
+            return searchServiceCall(isFeedRequest, function() {
+                return searchService.searchByPrediction(searchVM.filter.photo.prediction, searchVM.photos.length);
+            });
+        }
+
+        function resetFilter() {
+            searchVM.searchByPhotoButtonText = "Filter by photo (click to upload)..";
+            searchVM.lastFilter = "none";
+            searchVM.feedStopped = false;
+            searchVM.filter = {
+                visible: true,
+                hashTag: "",
+                description: "",
+                photo: {
+                    file: {},
+                    prediction: []
+                }
+            };
+            searchVM.photos = [];
+            searchVM.feedTrigger++;
+        }
+
+        function toHashTagSearch(hashTag) {
+            $window.location.href = communicationService.appUrl(`search/${hashTag}`);
+        }
+
+        function feedMore() {
+            if (searchVM.feedStopped)
+                return false;
+
+            switch (searchVM.lastFilter) {
+                case "none":
+                    return search(true);
+                case "hashtag":
+                    return searchByHashTag(true);
+                case "description":
+                    return searchByDescription(true);
+                case "prediciton":
+                    return searchByPrediction(true);
+                default:
+                    return null;
+            }
+        }
+
+        function searchServiceCall(isFeedRequest, action) {
+            if (!isFeedRequest) {
+                searchVM.photos = [];
+                searchVM.feedStopped = false;
+                searchVM.feedTrigger++;
+                return null;
+            }
+
+            return action().then(function(response) {
+                if (response.success)
+                    searchVM.feedStopped = response.data.length === 0;
+                else
+                    searchVM.errors = response.messages;
+
+                return response;
+            });
+        }
+    }
+})();
+(function() {
+
+    angular
+        .module("search")
+        .factory("searchService", searchService);
+
+    searchService.$inject = ["communicationService"];
+
+    function searchService(communicationService) {
+        const service = {
+            search: search,
+            searchByHashTag: searchByHashTag,
+            searchByDescription: searchByDescription,
+            searchByPrediction: searchByPrediction
+        };
+
+        return service;
+
+        function search(currentFeedSize) {
+            return communicationService.post("api/search", { currentFeedSize: currentFeedSize });
+        }
+
+        function searchByHashTag(hashTag, currentFeedSize) {
+            return communicationService.post("api/search/byHashTag",
+                { hashTag: hashTag, currentFeedSize: currentFeedSize });
+        }
+
+        function searchByDescription(description, currentFeedSize) {
+            return communicationService.post("api/search/byDescription/",
+                { description: description, currentFeedSize: currentFeedSize });
+        }
+
+        function searchByPrediction(prediction, currentFeedSize) {
+            return communicationService.post("api/search/byPrediction/",
+                { prediction: prediction, currentFeedSize: currentFeedSize });
+        }
+    }
+
+})();

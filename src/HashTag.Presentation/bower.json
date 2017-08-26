@@ -1,0 +1,31 @@
+{
+  "name": "hashtag",
+  "private": true,
+  "dependencies": {
+    "angular": "1.6.2",
+    "angular-animate": "1.6.2",
+    "angular-aria": "1.5.5",
+    "angular-bootstrap-lightbox": "0.12.0",
+    "angular-file-upload": "2.5.0",
+    "angular-material": "1.1.4",
+    "angular-messages": "1.5.5",
+    "angular-route": "1.6.2",
+    "angular-scroll-glue": "2.2.0",
+    "bootstrap": "4.0.0-alpha.6",
+    "bootstrap-social": "5.1.1",
+    "chart.js": "2.6.0",
+    "font-awesome": "4.7.0",
+    "glyphicons": "0.0.2",
+    "jquery": "2.2.0",
+    "jquery-validation": "1.14.0",
+    "jquery-validation-unobtrusive": "3.2.6",
+    "ngInfiniteScroll": "1.0.0",
+    "tether": "1.4.0",
+    "toastr": "2.1.3"
+  },
+  "resolutions": {
+    "bootstrap": "4.0.0-alpha.6",
+    "jquery": ">=1.8",
+    "angular": ">=1.4.0"
+  }
+}

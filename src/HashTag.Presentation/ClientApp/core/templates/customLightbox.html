@@ -1,0 +1,50 @@
+﻿<div class="modal-body"
+     ng-swipe-left="Lightbox.nextImage()"
+     ng-swipe-right="Lightbox.prevImage()">
+    
+
+    <!-- navigation -->
+    <div class="lightbox-nav">
+        
+        <!-- actions -->
+        <button class="close" aria-hidden="true" ng-click="$dismiss()">×</button>
+        <div ng-if="Lightbox.images.length > 1" class="actions clearfix">
+            <a class="btn btn-xs btn-secondary" ng-click="Lightbox.prevImage()">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </a>
+
+            <a ng-href="{{Lightbox.image.address}}" target="_blank" class="btn btn-xs btn-secondary">
+                <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+            </a>
+
+            <a class="btn btn-xs btn-secondary" ng-click="Lightbox.nextImage()">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="lightbox-image-container">
+        <div class="photo">
+
+            <!-- header -->
+            <div class="photo-header">
+                <span class="m-0">
+                    <a class="white" href="/profile/{{Lightbox.image.user}}">{{Lightbox.image.user}}</a>
+                </span>
+            </div>
+
+            <!-- image -->
+            <img lightbox-src="{{Lightbox.image.address}}">
+
+            <!-- footer -->
+            <div class="photo-footer">
+                <p class="m-0">
+                    <a class="hashtag white" ng-click="searchByHashTag(hashTag)" ng-repeat="hashTag in Lightbox.image.hashTags track by $index">
+                        #{{ hashTag }}
+                    </a>
+                </p>
+                <p class="m-0">{{ Lightbox.image.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>

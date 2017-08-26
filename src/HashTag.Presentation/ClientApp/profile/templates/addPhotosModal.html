@@ -1,0 +1,62 @@
+﻿<!-- head -->
+<div class="modal-header">
+
+    <!-- select photos button - uploader -->
+    <button class="btn btn-outline-secondary btn-sm btn-file-uploader" file-button uploader="modalVM.uploader">
+        <i class="fa fa-folder-open" aria-hidden="true"></i>&nbsp; Select photos
+    </button>
+</div>
+
+<!-- body -->
+<div class="modal-body modal-custom-width add-photos-modal-body" scroll-glue>
+    <div class="row">
+        <div class="col-md-12" ng-show="modalVM.uploader.queue.length">
+
+            <!-- items -->
+            <div class="row mb-3" ng-repeat="item in modalVM.uploader.queue | filter:{descriptionComputed:true}">
+
+                <!-- photo and name -->
+                <div class="col-xs-12 col-lg-5">
+                    <div up-photo-preview class="text-center mt-1" photo="item._file" height="200" width="200"></div>
+                    <p class="text-center m-0 mb-1">{{ item.file.name }}</p>
+                </div>
+
+                <!-- hashtags, description and actions -->
+                <div class="col-xs-12 col-lg-7 text-center">
+
+                    <!-- photo hashtags and description -->
+                    <input class="form-control mt-1" ng-model="item.hashTags" hashtags placeholder="Insert your #hashTags"/>
+                    <textarea class="form-control mt-1" ng-model="item.description" rows="6" placeholder="Insert your description"></textarea>
+
+                    <!-- actions per photo -->
+                    <button type="button" class="btn btn-outline-success btn-sm mt-3" ng-click="modalVM.uploadPhoto(item)" ng-disabled="item.isUploaded || item.isSuccess || item.isUploading">
+                        <span class="glyphicon glyphicon-upload"></span> Upload
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm mt-3" ng-click="modalVM.removePhoto(item)" ng-disabled="item.isUploaded || item.isSuccess || item.isUploading">
+                        <span class="glyphicon glyphicon-trash"></span> Remove
+                    </button>
+                </div>
+
+                <!-- separator -->
+                <div class="col-xs-12 col-md-12">
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+<div class="modal-footer">
+
+    <!-- upload all button -->
+    <button class="btn btn-outline-success btn-sm" type="button" ng-click="modalVM.uploadAllPhotos()"
+            ng-disabled="!(modalVM.uploader.queue | filter:{descriptionComputed: true, isUploading: false, isSuccess: false}).length">
+        <i class="fa fa-upload" aria-hidden="true"></i> Upload all
+    </button>
+
+    <!-- cancel button -->
+    <button class="btn btn-outline-danger btn-sm" type="button" ng-click="modalVM.cancel()">
+        <i class="fa fa-times" aria-hidden="true"></i> Cancel
+    </button>
+</div>

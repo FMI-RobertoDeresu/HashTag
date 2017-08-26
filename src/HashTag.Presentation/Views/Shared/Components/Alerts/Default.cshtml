@@ -1,0 +1,14 @@
+﻿@using HashTag.Infrastructure.Extensions
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Serialization
+@{
+    var alerts = Context.Session.GetAlertsWithRemove();
+    var jsonSerializeSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+    var json = JsonConvert.SerializeObject(alerts, jsonSerializeSettings);
+}
+
+<script type="text/javascript">
+    var json = '@Html.Raw(json.Replace("'", ""))';
+    var alerts = JSON.parse(json);
+    showAlerts(alerts);
+</script>
