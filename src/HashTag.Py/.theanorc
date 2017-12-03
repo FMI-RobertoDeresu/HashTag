@@ -1,0 +1,2 @@
+[gcc]
+cxxflags = -D_hypot=hypot
