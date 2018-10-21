@@ -1,0 +1,33 @@
+html {
+	font-family: "Lucida Sans Unicode";
+}
+
+/* privacy */
+body#privacy {
+	text-align: justify;
+	background-color: #fff;
+	color: #000;
+}
+
+body#privacy > div#privacy-content {
+	width: 95%;
+	margin: 0 auto;
+}
+
+@media (min-width: 800px) {
+    body#privacy > div#privacy-content {
+        width: 70%;
+        margin: 64px auto;
+    }
+}
+
+body#privacy > div#privacy-content h2 {
+	margin-top: 20px;
+	margin-bottom: 5px;
+}
+
+
+body#privacy > div#privacy-content p {
+	margin-top: 5px;
+	margin-bottom: 20px;
+}

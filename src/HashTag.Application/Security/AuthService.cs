@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using HashTag.Contracts.Services;
 using HashTag.Domain.DependencyInjection;
 using HashTag.Domain.Models;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
 namespace HashTag.Application.Security
@@ -13,17 +13,17 @@ namespace HashTag.Application.Security
     internal class AuthService : IAuthService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _usernaManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> usernaManager)
+        public AuthService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
-            _usernaManager = usernaManager;
+            _userManager = userManager;
         }
 
         public async Task<SignInResult> SignInAsync(string nameOrEmail, string password, bool persistent)
         {
-            var user = await _usernaManager.FindByNameAsync(nameOrEmail) ?? await _usernaManager.FindByEmailAsync(nameOrEmail);
+            var user = await _userManager.FindByNameAsync(nameOrEmail) ?? await _userManager.FindByEmailAsync(nameOrEmail);
             if (user == null)
                 throw new Exception("Incorrect username or password.");
 
@@ -32,9 +32,10 @@ namespace HashTag.Application.Security
             return result;
         }
 
-        public async Task<AuthenticationProperties> ConfigureExternalAuthenticationPropertiesAsync(string provider, string callBackUrl)
+        public Task<AuthenticationProperties> ConfigureExternalAuthenticationPropertiesAsync(string provider, string callBackUrl)
         {
-            return _signInManager.ConfigureExternalAuthenticationProperties(provider, callBackUrl);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, callBackUrl);
+            return Task.FromResult(properties);
         }
 
         public async Task<SignInResult> ExternalSignInAsync()
@@ -65,11 +66,11 @@ namespace HashTag.Application.Security
                 throw new Exception("Email has been changed.");
 
             var applicationUser = new ApplicationUser(email, userName);
-            var result = await _usernaManager.CreateAsync(applicationUser);
+            var result = await _userManager.CreateAsync(applicationUser);
             if (!result.Succeeded)
                 return result;
 
-            result = await _usernaManager.AddLoginAsync(applicationUser, info);
+            result = await _userManager.AddLoginAsync(applicationUser, info);
             if (!result.Succeeded)
                 return result;
 

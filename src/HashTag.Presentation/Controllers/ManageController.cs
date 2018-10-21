@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HashTag.Presentation.Controllers
 {
     [Authorize]
+    [Route("Manage")]
     public class ManageController : BaseController
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -32,15 +33,15 @@ namespace HashTag.Presentation.Controllers
             _appLogger = appLogger;
         }
 
-        [HttpGet]
+        [HttpGet("SetPassword")]
         public async Task<IActionResult> SetPassword()
         {
             var model = new SetPasswordModel(_currentUserAccessor.User.Id);
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("SetPassword")]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordModel model)
         {
             if (!ModelState.IsValid)
@@ -65,15 +66,15 @@ namespace HashTag.Presentation.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("EditUser")]
         public async Task<IActionResult> EditUser()
         {
             var model = new EditUserModel(_currentUserAccessor.User.Id, _currentUserAccessor.User.UserName);
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("EditUser")]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(EditUserModel model)
         {
             if (!model.WithPasswordChange)

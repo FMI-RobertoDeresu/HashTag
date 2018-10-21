@@ -11,7 +11,7 @@ namespace HashTag.Presentation.Controllers
         protected MessagesOptions MessagesOptions
             => HttpContext.RequestServices.GetRequiredService<IOptions<MessagesOptions>>().Value;
 
-        protected IActionResult RedirectToDefault => Redirect("/");
+        protected IActionResult RedirectToDefault => RedirectToAction("Search", "Pages");
 
         protected string GenericErrorMessage => MessagesOptions.GenericErrorMessage;
 

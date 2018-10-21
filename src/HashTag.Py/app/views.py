@@ -12,14 +12,14 @@ def processPhotos(request):
         photosPaths = request.data['photosPaths']
         
         startTime = datetime.now()
-        print 'Start time ' + str(startTime)
+        print('Start time ' + str(startTime))
 
         response = VGG19_Model.getPredictedData(photosPaths)
 
         endTime = datetime.now()
-        print 'End time ' + str(endTime)
+        print('End time ' + str(endTime))
         
         totaTime = (endTime - startTime).seconds + (endTime - startTime).microseconds/1E6
-        print 'Total time ' + str(totaTime) + 's\n\n'
+        print('Total time ' + str(totaTime) + 's\n\n')
 
         return Response(response)

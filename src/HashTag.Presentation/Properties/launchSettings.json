@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "https://localhost/HashTag",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "https://localhost:44369/",
       "sslPort": 44369
@@ -22,6 +26,15 @@
       "launchUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Hosting": {
+      "commandName": "IIS",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost/HashTag",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "APPDATA": "C:\\Users\\Roberto\\AppData\\Roaming"
       }
     }
   }

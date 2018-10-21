@@ -8,7 +8,7 @@ namespace HashTag.Presentation.Models.Manage
     {
         public EditUserModel()
         {
-            WithPasswordChange = true;
+            WithPasswordChange = false;
         }
 
         public EditUserModel(long userId, string userName) 

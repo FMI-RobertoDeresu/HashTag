@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using HashTag.Domain.AutoMapping;
 using HashTag.Domain.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HashTag.Presentation.Models.Photo
 {
-    public class PhotoModel : IMapFrom<PhotoDto>
+    public class PhotoModel : IAutoMapCustom
     {
         public long Id { get; set; }
 
         public string User { get; set; }
 
-        public string Address => $"/api/photos/get/{Id}";
+        public string Address { get; private set; }
 
         public string Url => Address; //used for lightbox
 
@@ -19,5 +21,16 @@ namespace HashTag.Presentation.Models.Photo
         public IEnumerable<string> HashTags { get; set; }
 
         public bool ShowActions { get; set; }
+
+        public void SetAddress(IUrlHelper urlHelper)
+        {
+            Address = urlHelper.Content($"~/api/photos/get/{Id}");
+        }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<PhotoDto, PhotoModel>()
+                .ForMember(dest => dest.Address, map => map.Ignore());
+        }
     }
 }

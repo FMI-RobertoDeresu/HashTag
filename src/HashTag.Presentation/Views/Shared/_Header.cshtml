@@ -17,10 +17,10 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                @if (await AuthorizationService.AuthorizeAsync(User, "admin"))
+                @if ((await AuthorizationService.AuthorizeAsync(User, "admin")).Succeeded)
                 {
                     <li class="nav-item active">
-                        <a class="nav-link" href="@Url.RouteUrl("admin")">
+                        <a class="nav-link" asp-controller="Pages" asp-action="Admin">
                             <i class="fa fa-cogs" aria-hidden="true"></i> Admin
                         </a>
                     </li>
@@ -29,7 +29,7 @@
                 @if (UserAccessor.User != null)
                 {
                     <li class="nav-item active">
-                        <a class="nav-link" href="@Url.RouteUrl("profile", new { userName = UserAccessor.UserName })">
+                        <a class="nav-link" asp-controller="Pages" asp-action="Profile" asp-route-userName="@UserAccessor.UserName">
                             <i class="fa fa-user" aria-hidden="true"></i> @UserAccessor.User.UserName
                         </a>
                     </li>
@@ -41,18 +41,18 @@
                     if (!await UserManager.HasPasswordAsync(UserAccessor.ApplicationUser))
                     {
                         <li class="nav-item active hidden-lg-up">
-                            <a class="nav-link" asp-route="setpassword">
+                            <a class="nav-link" asp-controller="Manage" asp-action="SetPassword">
                                 <i class="fa fa-cogs" aria-hidden="true"></i> Set a password
                             </a>
                         </li>
                     }
                     <li class="nav-item active hidden-lg-up">
-                        <a class="nav-link" asp-route="edituser">
+                        <a class="nav-link" asp-controller="Manage" asp-action="EditUser">
                             <i class="fa fa-cogs" aria-hidden="true"></i> Edit username or password
                         </a>
                     </li>
                     <li class="nav-item active hidden-lg-up">
-                        <a class="nav-link" href="@Url.RouteUrl("signout")">
+                        <a class="nav-link" asp-controller="Auth" asp-action="SignOut">
                             <i class="fa fa-sign-out" aria-hidden="true"></i> Sign out
                         </a>
                     </li>
@@ -83,12 +83,12 @@
                 <div class="dropdown-menu">
                     @if (!await UserManager.HasPasswordAsync(UserAccessor.ApplicationUser))
                     {
-                        <a class="dropdown-item" asp-route="setpassword">Set a password</a>
+                        <a class="dropdown-item" asp-controller="Manage" asp-action="SetPassword">Set a password</a>
                     }
-                    <a class="dropdown-item" asp-route="edituser">Edit username or password</a>
+                    <a class="dropdown-item" asp-controller="Manage" asp-action="EditUser">Edit username or password</a>
                 </div>
             </div>
-            <a class="btn btn-outline-danger hidden-md-down rounded-left-0" href="@Url.RouteUrl("signout")">
+            <a class="btn btn-outline-danger hidden-md-down rounded-left-0" asp-controller="Auth" asp-action="SignOut">
                 <i class="fa fa-sign-out" aria-hidden="true"></i> Sign out
             </a>
         }

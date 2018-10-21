@@ -6,6 +6,7 @@ using AutoMapper;
 using HashTag.Contracts.Loggers;
 using HashTag.Contracts.Services;
 using HashTag.Domain.Dtos;
+using HashTag.Infrastructure.Extensions;
 using HashTag.Presentation.Models;
 using HashTag.Presentation.Models.Photo;
 using HashTag.Presentation.Models.User;
@@ -34,6 +35,7 @@ namespace HashTag.Presentation.Controllers.Api
             {
                 var user = await _userService.GetWithPhotoAsync(userName);
                 var profilePhotoModel = Mapper.Map<PhotoModel>(Mapper.Map<PhotoDto>(user.ProfilePhoto));
+                profilePhotoModel.SetAddress(Url);
                 var result = new
                 {
                     FullName = user.UserName,
@@ -56,6 +58,7 @@ namespace HashTag.Presentation.Controllers.Api
             {
                 var photosDtos = await _userService.GetPhotosAsync(userName, currentFeedSize);
                 var photosModels = Mapper.Map<IEnumerable<PhotoModel>>(photosDtos);
+                photosModels.ForEach(x => x.SetAddress(Url));
 
                 return OkJsonResult(JsonResponse.SuccessResponse(photosModels));
             }

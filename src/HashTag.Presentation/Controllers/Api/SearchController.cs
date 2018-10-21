@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using HashTag.Contracts.Loggers;
 using HashTag.Contracts.Services;
+using HashTag.Infrastructure.Extensions;
 using HashTag.Presentation.Models;
 using HashTag.Presentation.Models.Photo;
 using HashTag.Presentation.Models.Search;
@@ -74,6 +75,8 @@ namespace HashTag.Presentation.Controllers.Api
             try
             {
                 var photosModels = await innerSearchAction(model);
+                photosModels.ForEach(x => x.SetAddress(Url));
+
                 return OkJsonResult(JsonResponse.SuccessResponse(photosModels));
             }
             catch (Exception exception)

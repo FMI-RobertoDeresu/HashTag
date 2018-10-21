@@ -121,6 +121,7 @@ namespace HashTag.Presentation.Controllers.Api
 
                 var photoDto = await _photoService.GetAsync(id);
                 var photoModel = Mapper.Map<PhotoModel>(photoDto);
+                photoModel.SetAddress(Url);
                 photoModel.ShowActions = true;
 
                 return CreatedJsonResult(JsonResponse.SuccessResponse("Photo was added!", photoModel));

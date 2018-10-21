@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace HashTag.Domain.Models
 {
-    public class ApplicationUser : IdentityUser<long>
+    public sealed class ApplicationUser : IdentityUser<long>
     {
         public ApplicationUser()
         {

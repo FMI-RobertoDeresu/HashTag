@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HashTag.Presentation.Controllers
 {
+    [Route("Auth")]
     public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
@@ -28,8 +29,8 @@ namespace HashTag.Presentation.Controllers
             _appLogger = appLogger;
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("SignIn")]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> SignIn(SignInModel model)
         {
             if (User.Identity.IsAuthenticated)
@@ -56,8 +57,8 @@ namespace HashTag.Presentation.Controllers
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("Register")]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (User.Identity.IsAuthenticated)
@@ -84,7 +85,7 @@ namespace HashTag.Presentation.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("ExternalLogin")]
         public async Task<IActionResult> ExternalLogin(string provider)
         {
             var callbackUrl = Url.Action("ExternalLoginCallback", "Auth");
@@ -94,7 +95,7 @@ namespace HashTag.Presentation.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("ExternalLoginCallback")]
         public async Task<IActionResult> ExternalLoginCallback(string remoteError = null)
         {
             if (!string.IsNullOrEmpty(remoteError))
@@ -122,7 +123,7 @@ namespace HashTag.Presentation.Controllers
             return View("ExternalLoginConfirmation", confirmationModel);
         }
 
-        [HttpPost]
+        [HttpPost("ExternalLoginConfirmation")]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationModel model)
         {
             if (!ModelState.IsValid)
@@ -136,6 +137,7 @@ namespace HashTag.Presentation.Controllers
         }
 
         [Authorize]
+        [HttpGet("SignOut")]
         public async Task<IActionResult> SignOut()
         {
             await _authService.SignOutAsync();

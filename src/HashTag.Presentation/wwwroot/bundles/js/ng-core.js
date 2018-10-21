@@ -1,5 +1,5 @@
 (function() {
-    const defaultUrl = document.getElementById("default-url").value;
+    const defaultUrl = `${document.getElementById("default-url").value}/`.replace("//", "/");
     const clientAppUrl = `${defaultUrl}/clientapp/`.replace("//", "/");
 
     angular

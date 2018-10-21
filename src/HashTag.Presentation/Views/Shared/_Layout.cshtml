@@ -36,7 +36,7 @@
 <body>
     @Html.Partial("_Header")
     
-    <input type="hidden" id="default-url" value="@Url.Content("/")" />
+    <input type="hidden" id="default-url" value="@Url.Content("~")" />
     <div id="page-container" class="container app-container">
         @RenderBody()
     </div>

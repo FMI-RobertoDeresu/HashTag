@@ -6,9 +6,11 @@ using HashTag.Infrastructure.Bootstrappers;
 using HashTag.Infrastructure.Extensions;
 using HashTag.Infrastructure.Filters;
 using HashTag.Presentation.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +35,7 @@ namespace HashTag.Presentation
                 .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
-                builder.AddUserSecrets("hashtagsecrets");
+                builder.AddUserSecrets("HashTagSecrets");
 
             Configuration = builder.Build();
         }
@@ -42,7 +44,49 @@ namespace HashTag.Presentation
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(
+                setup => setup.UseSqlServer(Configuration["db:default"], options => { options.MigrationsAssembly("HashTag.Presentation"); }));
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>(
+                    setup =>
+                    {
+                        setup.Password.RequiredLength = 6;
+                        setup.Password.RequireLowercase = false;
+                        setup.Password.RequireUppercase = false;
+                        setup.Password.RequireDigit = false;
+                        setup.Password.RequireNonAlphanumeric = false;
+                    })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthorization(
+                options => { options.AddPolicy("admin", policy => policy.RequireRole("admin")); });
+
+            var authenticationBuilder = services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+            authenticationBuilder.AddCookie(setup =>
+            {
+                setup.Cookie.Name = "_HashTagAuth";
+                setup.ExpireTimeSpan = TimeSpan.FromDays(1);
+                setup.SlidingExpiration = true;
+                setup.AccessDeniedPath = "/error/403";
+            });
+
+            if (!string.IsNullOrEmpty(Configuration["authentication:facebook:appId"]))
+                authenticationBuilder.AddFacebook(setup =>
+                {
+                    setup.AppId = Configuration["authentication:facebook:appId"];
+                    setup.AppSecret = Configuration["authentication:facebook:appSecret"];
+                });
+
+            if (!string.IsNullOrEmpty(Configuration["authentication:google:clientId"]))
+                authenticationBuilder.AddGoogle(setup =>
+                {
+                    setup.ClientId = Configuration["authentication:google:clientId"];
+                    setup.ClientSecret = Configuration["authentication:google:clientSecret"];
+                });
+
             services.AddSession();
+
             services.AddMvc(
                     options =>
                     {
@@ -51,7 +95,7 @@ namespace HashTag.Presentation
 
                         options.Filters.Add(typeof(ApplicationExceptionFilter));
 
-                        if (bool.Parse(Configuration["config:historyLogsEnalbled"]))
+                        if (bool.Parse(Configuration["config:historyLogsEnabled"]))
                             options.Filters.Add(typeof(RequestHistoryLogFilterAttribute));
 
                         options.Filters.Add(typeof(UnitOfWorkFilter));
@@ -63,31 +107,6 @@ namespace HashTag.Presentation
                         option.SerializerSettings.Formatting = Formatting.Indented;
                         option.SerializerSettings.Converters.Add(new StringEnumConverter());
                     });
-
-            services.AddAuthorization(
-                options => { options.AddPolicy("admin", policy => policy.RequireRole("admin")); });
-
-            services.AddDbContext<ApplicationDbContext>(
-                setup => setup.UseSqlServer(
-                    Configuration["db:default"],
-                    options => { options.MigrationsAssembly("HashTag.Presentation"); }));
-
-            services.AddIdentity<ApplicationUser, ApplicationRole>(
-                    setup =>
-                    {
-                        setup.Password.RequiredLength = 6;
-                        setup.Password.RequireLowercase = false;
-                        setup.Password.RequireUppercase = false;
-                        setup.Password.RequireDigit = false;
-                        setup.Password.RequireNonAlphanumeric = false;
-
-                        setup.Cookies.ApplicationCookie.CookieName = "_HashTagAuth";
-                        setup.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(1);
-                        setup.Cookies.ApplicationCookie.SlidingExpiration = true;
-                        setup.Cookies.ApplicationCookie.AccessDeniedPath = "/error/403";
-                    })
-                .AddEntityFrameworkStores<ApplicationDbContext, long>()
-                .AddDefaultTokenProviders();
 
             services.AddSingleton<IConfiguration>(Configuration);
             services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
@@ -105,34 +124,20 @@ namespace HashTag.Presentation
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
             else
+            {
                 app.UseExceptionHandler("/error");
-
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
+                app.UseStatusCodePagesWithReExecute("/error/{0}");
+            }
 
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "clientapp")),
-                RequestPath = new PathString("/clientapp"),
+                RequestPath = new PathString("/clientapp")
             });
 
-            app.UseIdentity();
-
-            if (!string.IsNullOrEmpty(Configuration["authentication:facebook:appId"]))
-                app.UseFacebookAuthentication(new FacebookOptions
-                {
-                    AppId = Configuration["authentication:facebook:appId"],
-                    AppSecret = Configuration["authentication:facebook:appSecret"]
-                });
-
-            if (!string.IsNullOrEmpty(Configuration["authentication:google:clientId"]))
-                app.UseGoogleAuthentication(new GoogleOptions
-                {
-                    ClientId = Configuration["authentication:google:clientId"],
-                    ClientSecret = Configuration["authentication:google:clientSecret"]
-                });
-
-            app.UseMvc(RouteBuilderExtensions.RegisterRoutes);
+            app.UseAuthentication();
+            app.UseMvc();
         }
     }
 }

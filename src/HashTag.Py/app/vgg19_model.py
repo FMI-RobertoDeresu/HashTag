@@ -73,11 +73,11 @@ class VGG19_Model:
 
     @staticmethod
     def initialization():
-        print "Creating model.."
+        print ("Creating model..")
         path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         weights_path = os.path.join(path, 'vgg19_weights.h5')
         VGG19_Model.model = VGG19_Model.CreateModel(weights_path)
-        print "Ready!"
+        print ("Ready!")
 
     @staticmethod
     def getPredictedData(photosPaths):
