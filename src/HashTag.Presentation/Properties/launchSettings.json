@@ -30,11 +30,10 @@
     },
     "IIS Hosting": {
       "commandName": "IIS",
-      "launchBrowser": true,
       "launchUrl": "https://localhost/HashTag",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "APPDATA": "C:\\Users\\Roberto\\AppData\\Roaming"
+        "APPDATA": "C:\\Users\\Roberto\\AppData\\Roaming",
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

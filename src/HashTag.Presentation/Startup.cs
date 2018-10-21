@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using HashTag.Contracts.Loggers;
 using HashTag.Data;
 using HashTag.Domain.Models;
 using HashTag.Infrastructure.Bootstrappers;
-using HashTag.Infrastructure.Extensions;
 using HashTag.Infrastructure.Filters;
+using HashTag.Infrastructure.Helpers;
+using HashTag.Infrastructure.Logging;
 using HashTag.Presentation.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -31,113 +33,130 @@ namespace HashTag.Presentation
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
                 builder.AddUserSecrets("HashTagSecrets");
 
             Configuration = builder.Build();
+            NLogHelper.ConfigureNLog(Configuration["db:default"], "nlog.config");
         }
 
         private IConfigurationRoot Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(
-                setup => setup.UseSqlServer(Configuration["db:default"], options => { options.MigrationsAssembly("HashTag.Presentation"); }));
-
-            services.AddIdentity<ApplicationUser, ApplicationRole>(
-                    setup =>
-                    {
-                        setup.Password.RequiredLength = 6;
-                        setup.Password.RequireLowercase = false;
-                        setup.Password.RequireUppercase = false;
-                        setup.Password.RequireDigit = false;
-                        setup.Password.RequireNonAlphanumeric = false;
-                    })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-            services.AddAuthorization(
-                options => { options.AddPolicy("admin", policy => policy.RequireRole("admin")); });
-
-            var authenticationBuilder = services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
-            authenticationBuilder.AddCookie(setup =>
+            try
             {
-                setup.Cookie.Name = "_HashTagAuth";
-                setup.ExpireTimeSpan = TimeSpan.FromDays(1);
-                setup.SlidingExpiration = true;
-                setup.AccessDeniedPath = "/error/403";
-            });
+                services.AddDbContext<ApplicationDbContext>(
+                    setup => setup.UseSqlServer(Configuration["db:default"], options => { options.MigrationsAssembly("HashTag.Presentation"); }));
 
-            if (!string.IsNullOrEmpty(Configuration["authentication:facebook:appId"]))
-                authenticationBuilder.AddFacebook(setup =>
+                services.AddIdentity<ApplicationUser, ApplicationRole>(
+                        setup =>
+                        {
+                            setup.Password.RequiredLength = 6;
+                            setup.Password.RequireLowercase = false;
+                            setup.Password.RequireUppercase = false;
+                            setup.Password.RequireDigit = false;
+                            setup.Password.RequireNonAlphanumeric = false;
+                        })
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
+                services.AddAuthorization(
+                    options => { options.AddPolicy("admin", policy => policy.RequireRole("admin")); });
+
+                var authenticationBuilder = services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+                authenticationBuilder.AddCookie(setup =>
                 {
-                    setup.AppId = Configuration["authentication:facebook:appId"];
-                    setup.AppSecret = Configuration["authentication:facebook:appSecret"];
+                    setup.Cookie.Name = "_HashTagAuth";
+                    setup.ExpireTimeSpan = TimeSpan.FromDays(1);
+                    setup.SlidingExpiration = true;
+                    setup.AccessDeniedPath = "/error/403";
                 });
 
-            if (!string.IsNullOrEmpty(Configuration["authentication:google:clientId"]))
-                authenticationBuilder.AddGoogle(setup =>
+                if (!string.IsNullOrEmpty(Configuration["authentication:facebook:appId"]))
                 {
-                    setup.ClientId = Configuration["authentication:google:clientId"];
-                    setup.ClientSecret = Configuration["authentication:google:clientSecret"];
-                });
-
-            services.AddSession();
-
-            services.AddMvc(
-                    options =>
+                    authenticationBuilder.AddFacebook(setup =>
                     {
-                        if (bool.Parse(Configuration["config:requireHttpsFilterEnabled"]))
-                            options.Filters.Add(new RequireHttpsAttribute { Permanent = true });
-
-                        options.Filters.Add(typeof(ApplicationExceptionFilter));
-
-                        if (bool.Parse(Configuration["config:historyLogsEnabled"]))
-                            options.Filters.Add(typeof(RequestHistoryLogFilterAttribute));
-
-                        options.Filters.Add(typeof(UnitOfWorkFilter));
-                    })
-                .AddJsonOptions(
-                    option =>
-                    {
-                        option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                        option.SerializerSettings.Formatting = Formatting.Indented;
-                        option.SerializerSettings.Converters.Add(new StringEnumConverter());
+                        setup.AppId = Configuration["authentication:facebook:appId"];
+                        setup.AppSecret = Configuration["authentication:facebook:appSecret"];
                     });
+                }
 
-            services.AddSingleton<IConfiguration>(Configuration);
-            services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
+                if (!string.IsNullOrEmpty(Configuration["authentication:google:clientId"]))
+                {
+                    authenticationBuilder.AddGoogle(setup =>
+                    {
+                        setup.ClientId = Configuration["authentication:google:clientId"];
+                        setup.ClientSecret = Configuration["authentication:google:clientSecret"];
+                    });
+                }
 
-            services.Configure<MessagesOptions>(Configuration.GetSection("messages"));
+                services.AddSession();
 
-            ApplicationBootstrapper.ApplyAllBootstrappers(services);
+                services.AddMvc(
+                        options =>
+                        {
+                            if (bool.Parse(Configuration["config:requireHttpsFilterEnabled"]))
+                                options.Filters.Add(new RequireHttpsAttribute {Permanent = true});
+
+                            options.Filters.Add(typeof(ApplicationExceptionFilter));
+
+                            if (bool.Parse(Configuration["config:historyLogsEnabled"]))
+                                options.Filters.Add(typeof(RequestHistoryLogFilterAttribute));
+
+                            options.Filters.Add(typeof(UnitOfWorkFilter));
+                        })
+                    .AddJsonOptions(
+                        option =>
+                        {
+                            option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                            option.SerializerSettings.Formatting = Formatting.Indented;
+                            option.SerializerSettings.Converters.Add(new StringEnumConverter());
+                        });
+
+                services.AddSingleton<IConfiguration>(Configuration);
+                services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
+
+                services.Configure<MessagesOptions>(Configuration.GetSection("messages"));
+
+                ApplicationBootstrapper.ApplyAllBootstrappers(services);
+            }
+            catch (Exception exception)
+            {
+                new ApplicationLogger().LogFatal(exception);
+            }
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLogger logger)
         {
-            app.UseSession();
-            app.ConfigureNLog(env, loggerFactory, Configuration["db:default"]);
-
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            else
+            try
             {
-                app.UseExceptionHandler("/error");
-                app.UseStatusCodePagesWithReExecute("/error/{0}");
+                app.UseSession();
+
+                if (env.IsDevelopment())
+                    app.UseDeveloperExceptionPage();
+                else
+                {
+                    app.UseExceptionHandler("/error");
+                    app.UseStatusCodePagesWithReExecute("/error/{0}");
+                }
+
+                app.UseStaticFiles();
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "clientapp")),
+                    RequestPath = new PathString("/clientapp")
+                });
+
+                app.UseAuthentication();
+                app.UseMvc();
             }
-
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
+            catch (Exception exception)
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "clientapp")),
-                RequestPath = new PathString("/clientapp")
-            });
-
-            app.UseAuthentication();
-            app.UseMvc();
+                logger.LogError(exception);
+            }
         }
     }
 }

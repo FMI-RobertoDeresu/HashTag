@@ -16,20 +16,21 @@ namespace HashTag.Infrastructure.Logging
         public RequestHistoryLogger(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _logger = LogManager.GetCurrentClassLogger();
+            _logger = LogManager.GetLogger("RequestHistoryLogger");
         }
 
         public void LogRequest()
         {
-            var eventLog = new LogEventInfo(LogLevel.Info, "RequestHistoryLogger", string.Empty);
-            eventLog.Properties["Created"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-            eventLog.Properties["Ip"] = LogProperties.GetIp(_httpContextAccessor.HttpContext);
-            eventLog.Properties["Username"] = LogProperties.GetUsername(_httpContextAccessor.HttpContext);
-            eventLog.Properties["HttpMethod"] = LogProperties.GetHttpMethod(_httpContextAccessor.HttpContext);
-            eventLog.Properties["Url"] = LogProperties.GetUrl(_httpContextAccessor.HttpContext);
-            eventLog.Properties["UrlReferrer"] = LogProperties.GetUrlReferer(_httpContextAccessor.HttpContext);
+            var logEventInfo = new LogEventInfo();
+            logEventInfo.Level = LogLevel.Info;
+            logEventInfo.Properties["Created"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            logEventInfo.Properties["Ip"] = LogProperties.GetIp(_httpContextAccessor.HttpContext);
+            logEventInfo.Properties["Username"] = LogProperties.GetUsername(_httpContextAccessor.HttpContext);
+            logEventInfo.Properties["HttpMethod"] = LogProperties.GetHttpMethod(_httpContextAccessor.HttpContext);
+            logEventInfo.Properties["Url"] = LogProperties.GetUrl(_httpContextAccessor.HttpContext);
+            logEventInfo.Properties["UrlReferrer"] = LogProperties.GetUrlReferer(_httpContextAccessor.HttpContext);
 
-            _logger.Log(eventLog);
+            _logger.Log(logEventInfo);
         }
     }
 }

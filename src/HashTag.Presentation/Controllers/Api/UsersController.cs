@@ -35,7 +35,7 @@ namespace HashTag.Presentation.Controllers.Api
             {
                 var user = await _userService.GetWithPhotoAsync(userName);
                 var profilePhotoModel = Mapper.Map<PhotoModel>(Mapper.Map<PhotoDto>(user.ProfilePhoto));
-                profilePhotoModel.SetAddress(Url);
+                profilePhotoModel?.SetAddress(Url);
                 var result = new
                 {
                     FullName = user.UserName,
