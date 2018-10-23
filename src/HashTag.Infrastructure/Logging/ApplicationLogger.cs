@@ -8,17 +8,18 @@ namespace HashTag.Infrastructure.Logging
     [TransientDependency(ServiceType = typeof(IApplicationLogger))]
     public class ApplicationLogger : IApplicationLogger
     {
+        private const string LoggerName = "ApplicationLogger";
+
         private readonly ILogger _logger;
 
         public ApplicationLogger()
         {
-            _logger = LogManager.GetLogger("ApplicationLogger");
+            _logger = LogManager.GetLogger(LoggerName);
         }
 
         public void LogInfo(string message)
         {
-            var logEventInfo = new LogEventInfo();
-            logEventInfo.Level = LogLevel.Info;
+            var logEventInfo = new LogEventInfo(LogLevel.Info, LoggerName, string.Empty);
             logEventInfo.Properties["Created"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             logEventInfo.Properties["Type"] = $"{LogLevel.Info}";
             logEventInfo.Properties["Message"] = message;
@@ -50,8 +51,7 @@ namespace HashTag.Infrastructure.Logging
                 innerException = innerException.InnerException;
             }
 
-            var logEventInfo = new LogEventInfo();
-            logEventInfo.Level = level;
+            var logEventInfo = new LogEventInfo(level, LoggerName, string.Empty);
             logEventInfo.Properties["Created"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             logEventInfo.Properties["Type"] = $"{level} - {exception.GetType().Name}";
             logEventInfo.Properties["Message"] = message;

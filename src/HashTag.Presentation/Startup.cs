@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using HashTag.Contracts.Loggers;
 using HashTag.Data;
 using HashTag.Domain.Models;
@@ -152,11 +154,37 @@ namespace HashTag.Presentation
 
                 app.UseAuthentication();
                 app.UseMvc();
+
+                if (bool.Parse(Configuration["imageProcessing:runOnStartup"]))
+                    RunImageProcessingAppAsync(logger).GetAwaiter().GetResult();
             }
             catch (Exception exception)
             {
                 logger.LogError(exception);
             }
+        }
+
+        private async Task RunImageProcessingAppAsync(IApplicationLogger logger)
+        {
+            var processStartInfo = new ProcessStartInfo("cmd.exe", "/c startpyapp.bat");
+            processStartInfo.CreateNoWindow = true;
+            processStartInfo.UseShellExecute = false;
+            processStartInfo.RedirectStandardError = true;
+            processStartInfo.RedirectStandardOutput = true;
+
+            var process = Process.Start(processStartInfo);
+            if (process == null)
+                throw new Exception("Process cannot be null");
+
+            process.OutputDataReceived += (sender, e) =>
+                logger.LogInfo("RunImageProcessingApp - output>>" + e.Data);
+            process.BeginOutputReadLine();
+
+            process.ErrorDataReceived += (sender, e) =>
+                logger.LogInfo("RunImageProcessingApp - error>>" + e.Data);
+            process.BeginErrorReadLine();
+
+            await Task.Delay(TimeSpan.FromSeconds(10));
         }
     }
 }

@@ -9,10 +9,12 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
     <IsWindowsApplication>False</IsWindowsApplication>
-    <WebBrowserPort>8001</WebBrowserPort>
-    <InterpreterId>Global|PythonCore|2.7</InterpreterId>
+    <WebBrowserPort>8008</WebBrowserPort>
+    <InterpreterId>MSBuild|hashtagpy|$(MSBuildProjectFullPath)</InterpreterId>
     <DjangoSettingsModule>app.settings</DjangoSettingsModule>
     <NameOfLastUsedPublishProfile>py</NameOfLastUsedPublishProfile>
+    <PythonDebugWebServerCommandArguments>runserver --settings=app.settings 8008</PythonDebugWebServerCommandArguments>
+    <PythonRunWebServerCommandArguments>runserver --settings=app.settings 8008</PythonRunWebServerCommandArguments>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -60,7 +62,15 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="Global|PythonCore|2.7" />
+    <Interpreter Include="venvs\hashtagpy\">
+      <Id>hashtagpy</Id>
+      <Version>3.6</Version>
+      <Description>hashtagpy (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

@@ -241,3 +241,7 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /src/HashTag.Py/app/vgg19_weights.h5
+/src/HashTag.Py/hashtag_py
+/src/HashTag.Py/app/__pycache__
+/src/HashTag.Py/venvs/hashtagpy
+/src/HashTag.Py/app/migrations/__pycache__

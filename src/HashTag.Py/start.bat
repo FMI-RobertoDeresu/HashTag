@@ -1,1 +1,0 @@
-python C:\inetpub\wwwroot\hashtag.py\manage.py runserver --settings=app.settings 8008

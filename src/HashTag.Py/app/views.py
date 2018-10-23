@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import threading
 from datetime import datetime
-from vgg19_model import VGG19_Model
+from .vgg19_model import VGG19_Model
 
 lock = threading.Lock()
 

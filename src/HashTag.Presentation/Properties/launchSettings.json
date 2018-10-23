@@ -33,7 +33,8 @@
       "launchUrl": "https://localhost/HashTag",
       "environmentVariables": {
         "APPDATA": "C:\\Users\\Roberto\\AppData\\Roaming",
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "LOCALAPPDATA": "C:\\Users\\Roberto\\AppData\\Local"
       }
     }
   }

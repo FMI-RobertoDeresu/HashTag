@@ -1,5 +1,4 @@
 ﻿using System;
-using HashTag.Contracts;
 using HashTag.Contracts.Loggers;
 using HashTag.Domain.DependencyInjection;
 using Microsoft.AspNetCore.Http;
@@ -10,19 +9,20 @@ namespace HashTag.Infrastructure.Logging
     [TransientDependency(ServiceType = typeof(IRequestHistoryLogger))]
     public class RequestHistoryLogger : IRequestHistoryLogger
     {
-        private readonly ILogger _logger;
+        private const string LoggerName = "RequestHistoryLogger";
         private readonly IHttpContextAccessor _httpContextAccessor;
+
+        private readonly ILogger _logger;
 
         public RequestHistoryLogger(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _logger = LogManager.GetLogger("RequestHistoryLogger");
+            _logger = LogManager.GetLogger(LoggerName);
         }
 
         public void LogRequest()
         {
-            var logEventInfo = new LogEventInfo();
-            logEventInfo.Level = LogLevel.Info;
+            var logEventInfo = new LogEventInfo(LogLevel.Info, LoggerName, string.Empty);
             logEventInfo.Properties["Created"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             logEventInfo.Properties["Ip"] = LogProperties.GetIp(_httpContextAccessor.HttpContext);
             logEventInfo.Properties["Username"] = LogProperties.GetUsername(_httpContextAccessor.HttpContext);
