@@ -27,11 +27,12 @@
         .controller("searchController", searchController);
 
     searchController
-        .$inject = ["$scope", "$window", "FileUploader", "searchService", "photoService", "communicationService"];
+        .$inject = ["$scope", "$window", "FileUploader", "searchService", "photoService", "communicationService", "DEFAULT_URL"];
 
-    function searchController($scope, $window, FileUploader, searchService, photoService, communicationService) {
+    function searchController($scope, $window, FileUploader, searchService, photoService, communicationService, DEFAULT_URL) {
         const searchVM = this;
 
+        searchVM.defaultUrl = DEFAULT_URL;
         searchVM.feedStopped = false;
         searchVM.errors = [];
         searchVM.searchByPhotoButtonText = "Filter by photo (click to upload)..";

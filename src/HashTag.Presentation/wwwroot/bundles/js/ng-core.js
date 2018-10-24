@@ -159,6 +159,7 @@
             restrict: "E",
             scope: {
                 photos: "=",
+                defaultUrl: "=",
                 searchByHashTagFn: "&",
                 setPhotoAsProfileFn: "&",
                 deletePhotoFn: "&"
@@ -347,6 +348,7 @@
             restrict: "E",
             scope: {
                 photos: "=",
+                defaultUrl: "=",
                 feedTrigger: "=",
                 feedMoreFn: "&",
                 searchByHashTagFn: "&",
