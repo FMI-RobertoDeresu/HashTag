@@ -17,13 +17,16 @@ namespace HashTag.Presentation.Controllers.Api
     [Route("api/users/")]
     public class UsersController : ApiBaseController
     {
+        private readonly ICurrentUserAccessor _currentUserAccessor;
         private readonly IUserService _userService;
         private readonly IApplicationLogger _appLogger;
 
         public UsersController(
+            ICurrentUserAccessor currentUserAccessor,
             IUserService userService,
             IApplicationLogger appLogger)
         {
+            _currentUserAccessor = currentUserAccessor;
             _userService = userService;
             _appLogger = appLogger;
         }
@@ -39,7 +42,9 @@ namespace HashTag.Presentation.Controllers.Api
                 var result = new
                 {
                     FullName = user.UserName,
-                    ProfilePhoto = profilePhotoModel
+                    UserName = user.UserName,
+                    ProfilePhoto = profilePhotoModel,
+                    CurrentUserName = _currentUserAccessor.UserName
                 };
 
                 return ReadJsonResult(JsonResponse.SuccessResponse(result));

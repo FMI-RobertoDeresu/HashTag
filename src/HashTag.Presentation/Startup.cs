@@ -128,6 +128,7 @@ namespace HashTag.Presentation
             catch (Exception exception)
             {
                 new ApplicationLogger().LogFatal(exception);
+                throw;
             }
         }
 
@@ -161,6 +162,7 @@ namespace HashTag.Presentation
             catch (Exception exception)
             {
                 logger.LogError(exception);
+                throw;
             }
         }
 

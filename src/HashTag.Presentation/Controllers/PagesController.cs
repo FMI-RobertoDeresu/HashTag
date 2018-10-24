@@ -19,12 +19,13 @@ namespace HashTag.Presentation.Controllers
         }
 
         [HttpGet("/")]
+        [HttpGet("/search/{hashtag?}")]
         public IActionResult Search(string hashTag)
         {
             return View(nameof(Search), hashTag);
         }
 
-        [HttpGet("/Profile")]
+        [HttpGet("/Profile/{userName}")]
         public IActionResult Profile(string userName)
         {
             return View(nameof(Profile), userName);

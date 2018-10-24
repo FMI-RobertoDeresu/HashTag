@@ -12,7 +12,7 @@
     </div>
 
     <!-- add photos button -->
-    <div class="row mb-3">
+    <div class="row mb-3" ng-if="vm.showAddButton">
         <div class="col-12">
             <button type="button" class="btn btn-outline-primary m-auto" style="display: block" ng-click="vm.openAddPhotosModal()">
                 <i class="fa fa-plus"></i> {{vm.photos.length > 0 ? "Add more photos" : "Add your first photos" }}

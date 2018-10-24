@@ -39,6 +39,9 @@
                     if (response.success) {
                         vm.fullName = response.data.fullName;
                         vm.profilePhoto = response.data.profilePhoto;
+                        vm.userName = response.data.userName;
+                        vm.currentUserName = response.data.currentUserName;
+                        vm.showAddButton = vm.userName === vm.currentUserName;
                     }
                     else {
                         vm.errors = response.messages;

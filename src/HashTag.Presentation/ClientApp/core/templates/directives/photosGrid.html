@@ -3,7 +3,7 @@
         <div ng-repeat="photo in photos" class="photo photo-sm photo-has-custom-background">
             <div class="photo-header">
                 <span class="m-0">
-                    <a class="white" href="/profile/{{photo.user}}">{{photo.user}}</a>
+                    <a class="white" href="{{photo.userUrl}}">{{photo.user}}</a>
                 </span>
                 <div class="dropdown" ng-show="photo.showActions">
                     <a class="dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

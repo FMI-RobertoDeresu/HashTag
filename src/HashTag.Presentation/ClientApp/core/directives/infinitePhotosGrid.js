@@ -13,6 +13,7 @@
             restrict: "E",
             scope: {
                 photos: "=",
+                defaultUrl: "=",
                 feedTrigger: "=",
                 feedMoreFn: "&",
                 searchByHashTagFn: "&",

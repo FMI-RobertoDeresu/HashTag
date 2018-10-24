@@ -10,7 +10,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <IsWindowsApplication>False</IsWindowsApplication>
     <WebBrowserPort>8008</WebBrowserPort>
-    <InterpreterId>MSBuild|hashtagpy|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|HashTag.Py|$(MSBuildProjectFullPath)</InterpreterId>
     <DjangoSettingsModule>app.settings</DjangoSettingsModule>
     <NameOfLastUsedPublishProfile>py</NameOfLastUsedPublishProfile>
     <PythonDebugWebServerCommandArguments>runserver --settings=app.settings 8008</PythonDebugWebServerCommandArguments>
@@ -62,10 +62,10 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="venvs\hashtagpy\">
-      <Id>hashtagpy</Id>
+    <Interpreter Include="C:\Users\Roberto\.virtualenvs\HashTag.Py\">
+      <Id>HashTag.Py</Id>
       <Version>3.6</Version>
-      <Description>hashtagpy (Python 3.6 (64-bit))</Description>
+      <Description>HashTag.Py (Python 3.6 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
